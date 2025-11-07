@@ -2,7 +2,12 @@
 
 ## Overview
 
-Users receive 12 emails over 3 weeks, focusing on their THREE LOWEST scoring emotions.
+Users receive **14 total emails** over 4 weeks:
+- 1 Welcome email (Day 0)
+- 12 Emotion-focused emails (Days 0-19)
+- 1 Reassessment email (Day 28)
+
+All emails focus on the user's THREE LOWEST scoring emotions.
 
 ## Email Schedule Pattern
 
@@ -64,6 +69,26 @@ All emails include this promotional footer:
 - **Days 7-12**: Emotion 2 sequence
 - **Day 13**: Rest day
 - **Days 14-19**: Emotion 3 sequence
-- **Day 20+**: Assessment completion
+- **Days 20-27**: Reflection period
+- **Day 28**: Reassessment email
 
-Total: 21 days (3 weeks)
+Total: 28 days (4 weeks)
+
+## Reassessment Email (Day 28)
+
+**Subject:** Time to measure your positive emotion growth
+
+**Purpose:** Invite users to retake the PEGA assessment to measure their progress
+
+**Content includes:**
+- Reminder of their 3 focus emotions
+- Link to reassessment
+- Explanation that results will show before/after comparison
+- Encouragement about emotion development
+- CTA for Joy Study Teacher Training
+
+**Results Display:**
+- Original scores (from initial assessment)
+- Current scores (from reassessment)
+- Change/gain for each emotion
+- Visual comparison chart

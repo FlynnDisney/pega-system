@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { QUESTIONS } from '@/lib/constants';
 import QuestionItem from './QuestionItem';
 import ProgressBar from './ProgressBar';
 
 export default function AssessmentForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isReassessment = searchParams.get('reassessment') === 'true';
   const [email, setEmail] = useState('');
   const [answers, setAnswers] = useState<(number | null)[]>(
     new Array(40).fill(null)
@@ -86,6 +88,7 @@ export default function AssessmentForm() {
         body: JSON.stringify({
           email,
           answers: answers as number[],
+          isReassessment,
         }),
       });
 
@@ -96,9 +99,17 @@ export default function AssessmentForm() {
       }
 
       // Store results in sessionStorage and redirect
-      sessionStorage.setItem('assessmentResults', JSON.stringify(data.results));
       sessionStorage.setItem('assessmentEmail', email);
-      router.push('/results');
+
+      if (data.isComparison && data.comparison) {
+        // This is a reassessment with comparison data
+        sessionStorage.setItem('comparisonResults', JSON.stringify(data.comparison));
+        router.push('/results/comparison');
+      } else {
+        // Regular assessment
+        sessionStorage.setItem('assessmentResults', JSON.stringify(data.results));
+        router.push('/results');
+      }
     } catch (err) {
       setError(
         err instanceof Error
@@ -117,14 +128,23 @@ export default function AssessmentForm() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Positive Emotion Growth Assessment
+            {isReassessment ? 'PEGA Reassessment' : 'Positive Emotion Growth Assessment'}
           </h1>
           <p className="text-lg text-gray-600 mb-2">
-            Discover your positive emotion profile and receive personalized courses
+            {isReassessment
+              ? 'Measure your emotional growth over the past month'
+              : 'Discover your positive emotion profile and receive personalized courses'}
           </p>
           <p className="text-sm text-gray-500">
             Takes approximately 8-10 minutes • All responses are confidential
           </p>
+          {isReassessment && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-blue-800">
+                📊 Your results will compare to your original assessment, showing your growth in each emotion.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Instructions */}

@@ -16,7 +16,8 @@
  * The script will automatically:
  * - Check for new assessment submissions every hour
  * - Send the welcome email immediately
- * - Schedule 12 personalized emails over 3 weeks
+ * - Schedule 13 personalized emails over 4 weeks (12 emotion + 1 reassessment)
+ * - Send reassessment email on Day 28
  * - Mark rows as processed to avoid duplicates
  */
 
@@ -99,7 +100,7 @@ function checkForNewSubmissions() {
 
 /**
  * Start the email sequence for a user
- * Sends welcome email immediately and schedules all 12 future emails
+ * Sends welcome email immediately and schedules all 13 future emails
  */
 function startEmailSequence(email, lowestEmotions) {
   // Send welcome email immediately
@@ -116,6 +117,9 @@ function startEmailSequence(email, lowestEmotions) {
     // Schedule 4 emails for this emotion
     scheduleEmotionSequence(email, emotion, startDay);
   });
+
+  // Schedule reassessment email on Day 28
+  scheduleReassessmentEmail(email, lowestEmotions, 28);
 }
 
 /**
@@ -171,6 +175,66 @@ function sendWelcomeEmail(email) {
   });
 }
 
+/**
+ * Schedule reassessment email
+ */
+function scheduleReassessmentEmail(email, lowestEmotions, daysFromNow) {
+  const sendDate = new Date();
+  sendDate.setDate(sendDate.getDate() + daysFromNow);
+  sendDate.setHours(9, 0, 0, 0); // Send at 9 AM
+
+  const triggerFunction = 'sendReassessmentEmail';
+
+  // Create time-based trigger
+  ScriptApp.newTrigger(triggerFunction)
+    .timeBased()
+    .at(sendDate)
+    .create();
+
+  // Store email info in script properties
+  const props = PropertiesService.getScriptProperties();
+  const key = `${triggerFunction}_${sendDate.getTime()}`;
+  props.setProperty(key, JSON.stringify({
+    email: email,
+    lowestEmotions: lowestEmotions
+  }));
+}
+
+/**
+ * Send reassessment email (called by trigger)
+ */
+function sendReassessmentEmail() {
+  const props = PropertiesService.getScriptProperties();
+  const allProps = props.getProperties();
+
+  // Find the matching property
+  const now = new Date().getTime();
+  const matchKey = Object.keys(allProps).find(key => {
+    if (key.startsWith('sendReassessmentEmail_')) {
+      const timestamp = parseInt(key.split('_')[1]);
+      return Math.abs(now - timestamp) < 3600000; // Within 1 hour
+    }
+    return false;
+  });
+
+  if (!matchKey) {
+    Logger.log('No reassessment data found');
+    return;
+  }
+
+  const data = JSON.parse(allProps[matchKey]);
+  const subject = 'Time to measure your positive emotion growth';
+  const body = getReassessmentEmailBody(data.lowestEmotions);
+
+  GmailApp.sendEmail(data.email, subject, body, {
+    name: CONFIG.FROM_NAME
+  });
+
+  // Clean up
+  props.deleteProperty(matchKey);
+  Logger.log(`Sent reassessment email to ${data.email}`);
+}
+
 // ============================================
 // EMAIL CONTENT - WELCOME
 // ============================================
@@ -189,6 +253,35 @@ Keeping a notebook will help you make the most of the course – as reflecting o
 Finishing the course, you'll receive the assessment again – and if you'd like to, you can measure your positive emotional development. This helps you to track your progress, and it gives me some scientific data to work with. If you'd prefer not to be included in the data set, just tell me – but remember that your name won't be included in any published work.
 
 Tomorrow, you'll receive your first positive emotion to work with!`;
+}
+
+/**
+ * Get reassessment email body
+ */
+function getReassessmentEmailBody(lowestEmotions) {
+  const emotion1 = lowestEmotions[0];
+  const emotion2 = lowestEmotions[1];
+  const emotion3 = lowestEmotions[2];
+
+  return `Hey!
+
+Three weeks ago, you started working with ${emotion1}, ${emotion2}, and ${emotion3}.
+
+Time to measure your growth.
+
+Take the reassessment: https://flynndisney.com/joy-assessment
+
+Same 40 questions. Answer honestly based on the past month. You'll see your before and after scores.
+
+Remember: positive emotions develop like muscles - consistent practice over time creates lasting change. Whether you see big shifts or small ones, the data helps you understand where you are.
+
+If you want to go deeper with this work, the Joy Study Teacher Training offers six months of structured practice with direct feedback and peer support.
+
+Learn more: https://flynndisney.com/joy
+
+Thanks for your engagement with this practice.
+
+Flynn`;
 }
 
 // ============================================

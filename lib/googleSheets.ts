@@ -45,9 +45,13 @@ export async function getGoogleSheetsClient(): Promise<GoogleSpreadsheet> {
  * Column BB: Total_Score
  * Column BC-BE: Lowest_Emotion_1, Lowest_Emotion_2, Lowest_Emotion_3
  * Column BF: Email_Sequence_Started
+ * Column BG: Is_Reassessment (TRUE/FALSE)
+ * Column BH: Original_Submission_Timestamp (for linking reassessments to original)
  */
 export async function appendAssessmentData(
-  data: AssessmentSubmission
+  data: AssessmentSubmission,
+  isReassessment: boolean = false,
+  originalTimestamp?: string
 ): Promise<void> {
   try {
     const doc = await getGoogleSheetsClient();
@@ -76,6 +80,8 @@ export async function appendAssessmentData(
           'Lowest_Emotion_2',
           'Lowest_Emotion_3',
           'Email_Sequence_Started',
+          'Is_Reassessment',
+          'Original_Submission_Timestamp',
         ]
       });
     }
@@ -104,8 +110,11 @@ export async function appendAssessmentData(
       Lowest_Emotion_1: data.lowestEmotions[0],
       Lowest_Emotion_2: data.lowestEmotions[1],
       Lowest_Emotion_3: data.lowestEmotions[2],
-      // Email sequence flag
-      Email_Sequence_Started: 'FALSE',
+      // Email sequence flag (only for initial assessments)
+      Email_Sequence_Started: isReassessment ? 'N/A' : 'FALSE',
+      // Reassessment tracking
+      Is_Reassessment: isReassessment ? 'TRUE' : 'FALSE',
+      Original_Submission_Timestamp: originalTimestamp || '',
     };
 
     // Add the row
@@ -115,6 +124,58 @@ export async function appendAssessmentData(
     throw new Error(
       `Failed to save assessment data: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
+  }
+}
+
+/**
+ * Find original assessment by email address
+ * Returns the most recent initial assessment (not a reassessment)
+ */
+export async function findOriginalAssessment(email: string): Promise<any | null> {
+  try {
+    const doc = await getGoogleSheetsClient();
+    const sheet = doc.sheetsByIndex[0];
+
+    if (!sheet) {
+      return null;
+    }
+
+    const rows = await sheet.getRows();
+
+    // Find the most recent non-reassessment for this email
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const row = rows[i];
+      if (row.get('Email') === email && row.get('Is_Reassessment') !== 'TRUE') {
+        // Return the original assessment data
+        return {
+          timestamp: row.get('Timestamp'),
+          email: row.get('Email'),
+          scores: {
+            Joy: parseInt(row.get('Joy_Score')),
+            Gratitude: parseInt(row.get('Gratitude_Score')),
+            Serenity: parseInt(row.get('Serenity_Score')),
+            Interest: parseInt(row.get('Interest_Score')),
+            Hope: parseInt(row.get('Hope_Score')),
+            Pride: parseInt(row.get('Pride_Score')),
+            Amusement: parseInt(row.get('Amusement_Score')),
+            Inspiration: parseInt(row.get('Inspiration_Score')),
+            Awe: parseInt(row.get('Awe_Score')),
+            Love: parseInt(row.get('Love_Score')),
+          },
+          totalScore: parseInt(row.get('Total_Score')),
+          lowestEmotions: [
+            row.get('Lowest_Emotion_1'),
+            row.get('Lowest_Emotion_2'),
+            row.get('Lowest_Emotion_3'),
+          ],
+        };
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error finding original assessment:', error);
+    return null;
   }
 }
 

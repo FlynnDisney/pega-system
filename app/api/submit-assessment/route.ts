@@ -11,14 +11,14 @@ import {
   calculateTotalScore,
   identifyLowestEmotions,
 } from '@/lib/scoring';
-import { appendAssessmentData } from '@/lib/googleSheets';
+import { appendAssessmentData, findOriginalAssessment } from '@/lib/googleSheets';
 import { AssessmentSubmission } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
   try {
     // Parse request body
     const body = await request.json();
-    const { email, answers } = body;
+    const { email, answers, isReassessment } = body;
 
     // Validate email
     if (!email || typeof email !== 'string') {
@@ -74,9 +74,24 @@ export async function POST(request: NextRequest) {
       timestamp: new Date(),
     };
 
+    // Check if this is a reassessment and find original data
+    let originalData = null;
+    if (isReassessment) {
+      try {
+        originalData = await findOriginalAssessment(email);
+      } catch (error) {
+        console.error('Error finding original assessment:', error);
+        // Continue even if we can't find original - save as regular reassessment
+      }
+    }
+
     // Save to Google Sheets
     try {
-      await appendAssessmentData(submission);
+      await appendAssessmentData(
+        submission,
+        isReassessment || false,
+        originalData?.timestamp
+      );
     } catch (error) {
       console.error('Error saving to Google Sheets:', error);
       return NextResponse.json(
@@ -90,14 +105,36 @@ export async function POST(request: NextRequest) {
     }
 
     // Return results to frontend
-    return NextResponse.json({
-      success: true,
-      results: {
-        scores,
-        totalScore,
-        lowestEmotions,
-      },
-    });
+    if (isReassessment && originalData) {
+      // Return comparison data
+      return NextResponse.json({
+        success: true,
+        isComparison: true,
+        comparison: {
+          original: {
+            scores: originalData.scores,
+            totalScore: originalData.totalScore,
+            timestamp: originalData.timestamp,
+          },
+          current: {
+            scores,
+            totalScore,
+            timestamp: submission.timestamp.toISOString(),
+          },
+        },
+      });
+    } else {
+      // Return regular results
+      return NextResponse.json({
+        success: true,
+        isComparison: false,
+        results: {
+          scores,
+          totalScore,
+          lowestEmotions,
+        },
+      });
+    }
   } catch (error) {
     console.error('Unexpected error in submit-assessment:', error);
     return NextResponse.json(
