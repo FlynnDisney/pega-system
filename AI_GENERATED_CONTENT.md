@@ -49,7 +49,7 @@ Please rate each statement based on how true it feels for you in your daily life
 
 ### Page Subtitles
 
-- Regular: "Discover your positive emotion profile and receive personalized courses"
+- Regular: "Discover your positive emotion profile and receive a personalised course"
 - Reassessment: "Measure your emotional growth over the past month"
 
 ### General Helper Text

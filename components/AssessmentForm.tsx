@@ -133,7 +133,7 @@ export default function AssessmentForm() {
           <p className="text-lg text-gray-600 mb-2">
             {isReassessment
               ? 'Measure your emotional growth over the past month'
-              : 'Discover your positive emotion profile and receive personalized courses'}
+              : 'Discover your positive emotion profile and receive a personalised course'}
           </p>
           <p className="text-sm text-gray-500">
             Takes approximately 8-10 minutes • All responses are confidential

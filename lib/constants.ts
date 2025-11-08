@@ -160,16 +160,16 @@ export const SCORE_THRESHOLDS = {
 
 // Emotion descriptions for results page
 export const EMOTION_DESCRIPTIONS: Record<Emotion, string> = {
-  Joy: 'A feeling of happiness, contentment, and well-being',
-  Gratitude: 'Appreciation for what you have and the people in your life',
-  Serenity: 'A sense of peace, calm, and tranquility',
-  Interest: 'Curiosity and fascination with the world around you',
-  Hope: 'Optimism and confidence about the future',
-  Pride: 'Confidence in your abilities and pride in your accomplishments',
-  Amusement: 'Finding humor and playfulness in daily life',
-  Inspiration: 'Motivation to become your best self from witnessing excellence',
-  Awe: 'Wonder and amazement when encountering beauty or vastness',
-  Love: 'Close connections and warm feelings toward important people',
+  Joy: 'Openness and lightness when things go better than expected - felt throughout your whole body as energy and ease',
+  Gratitude: 'A relational emotion that builds secure relationships through responsive, relevant care - noticing needs and acknowledging thoughtfulness',
+  Serenity: 'Inner peace that comes from concentration, sensory clarity, and equanimity - feeling settled regardless of external circumstances',
+  Interest: 'A pull toward learning created by knowledge gaps that feel closeable and relevant - sustaining engagement through challenges',
+  Hope: 'Confidence and motivation through adversity - rooted in realistic planning, personal capability, meaningful goals, and social support',
+  Pride: 'Motivation to seek greater challenges from recognising your efforts and contributions - holding your head high with authentic confidence',
+  Amusement: 'Emotional flexibility and resilience through playful perspective-taking - finding multiple meanings that create surprise',
+  Inspiration: 'Creative energy and motivation for excellence from witnessing quality - like breathing in new possibilities that move you to action',
+  Awe: 'Perspective expansion through experiences of vastness and complexity - temporarily changing how you see yourself and the world',
+  Love: 'Momentary positivity resonance - sharing positive emotions with mutual care and behavioural synchrony',
 };
 
 // Colors for emotion visualization
