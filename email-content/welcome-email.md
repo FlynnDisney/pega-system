@@ -4,16 +4,14 @@
 
 **Body:**
 
-Hey! Thank you for completing the Positive Emotion Growth Assessment.
+Thank you for completing the Positive Emotion Growth Assessment. You've enrolled for three weeks of personalised interventions to develop the positive emotions you're less familiar with.
 
-By filling out that form, you enrolled for three weeks of personalised interventions, designed to help you develop the positive emotions you're less familiar with.
+Distinct positive emotions give you specific psychological resources. Pride gives you motivation, joy gives you openness, love gives you connection. Each time you experience a positive emotion, you're planting a seed that grows with regular, attentive nurturing.
 
-Feeling good isn't just about feeling good. Distinct positive emotions give you specific psychological resources. For example pride gives you motivation, joy gives you openness and love gives you connection. Each time you experience a positive emotion, you're planting a seed that grows — if it's nurtured regularly and attentively.
+This mini course provides "interventions" – activities that enhance particular positive emotions. If you scored low on amusement, you'll receive exercises to develop your sense of humour. I've adapted the works of scientific researchers and meditation teachers into simple, step-by-step tasks.
 
-This mini course provides you with "interventions" – activities that enhance particular positive emotions. For example, if you scored low on amusement, you'll receive exercises to develop your sense of humour. To create the best interventions possible, I've adapted the works of scientific researchers and meditation teachers into simple tasks, explained step by step.
+Keeping a notebook will help you make the most of the course. Reflecting on your experiences helps you remember them. Pen and paper is best for reviewing your reflections, but a note-taking app or voice recorder works too.
 
-Keeping a notebook will help you make the most of the course – as reflecting on your experiences helps you to remember them. Pen and paper is best because it's the easiest way to look back over your reflections – but using a note taking app or even a voice recorder is fine, too.
-
-Finishing the course, you'll receive the assessment again – and if you'd like to, you can measure your positive emotional development. This helps you to track your progress, and it gives me some scientific data to work with. If you'd prefer not to be included in the data set, just tell me – but remember that your name won't be included in any published work.
+At the end of the course, you'll receive the assessment again to measure your positive emotional development. This helps you track your progress and gives me scientific data to work with. If you'd prefer not to be included in the data set, just let me know – your name won't be included in any published work.
 
 Tomorrow, you'll receive your first positive emotion to work with!
